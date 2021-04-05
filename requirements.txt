@@ -1,0 +1,13 @@
+astroid==2.5.2
+click==7.1.2
+IPy==1.1
+isort==5.8.0
+lazy-object-proxy==1.6.0
+mccabe==0.6.1
+msgpack==1.0.2
+pyzmq==22.0.3
+sqlite-rx==1.0.1
+toml==0.10.2
+tornado==6.1
+wrapt==1.12.1
+yapf==0.31.0
