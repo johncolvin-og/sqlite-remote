@@ -1,7 +1,9 @@
 import logging.config
 from sys import argv
+import threading
 from sqlite_rx import get_default_logger_settings
 from sqlite_rx.server import SQLiteServer
+from sqlite_remote.ArgParser import get_option
 
 
 def print_help_and_exit(exit_code = 0):
@@ -19,16 +21,6 @@ def print_help_and_exit(exit_code = 0):
         """
     )
     exit(exit_code)
-    
-def get_option(name: str, options = argv[1:], default_value = None) -> str:
-    i = 0
-    for arg in options:
-        if arg == name:
-            if len(options) - 1 > i:
-                return options[i + 1]
-            break
-        i += 1
-    return default_value
 
 def create_sql_server(
     db_path: str, net_iface: str, port: int) -> SQLiteServer:
