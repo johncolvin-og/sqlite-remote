@@ -1,6 +1,7 @@
 import logging.config
 from sys import argv
 import threading
+import socket
 from sqlite_rx import get_default_logger_settings
 from sqlite_rx.server import SQLiteServer
 from sqlite_remote.ArgParser import get_option
@@ -22,16 +23,30 @@ def print_help_and_exit(exit_code = 0):
     )
     exit(exit_code)
 
+def next_free_port(port=1024, max_port=65535):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    while port <= max_port:
+        try:
+            sock.bind(('', port))
+            sock.close()
+            return port
+        except OSError:
+            port += 1
+    raise IOError('no free ports')
+
+
 def create_sql_server(
-    db_path: str, net_iface: str, port: int) -> SQLiteServer:
+    db_path: str, net_iface: str, preferred_port=5000) -> SQLiteServer:
     """Creates a sqlite server"""
+    port = next_free_port(preferred_port)
     return SQLiteServer(
         database=db_path, bind_address=f"tcp://{net_iface}:{port}")
 
+
 def start_sql_server(
-    db_path: str, net_iface: str, port: int) -> SQLiteServer:
+    db_path: str, net_iface: str, preferred_port: 5000) -> SQLiteServer:
     """Creates and starts a sqlite server"""
-    server = create_sql_server(db_path, net_iface, port)
+    server = create_sql_server(db_path, net_iface, preferred_port)
     server.start()
     return server
 
